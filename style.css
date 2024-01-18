@@ -5,5 +5,18 @@ body {
 }
 
 .bar {
-    background-color: blue;
+    fill: #01BAEF;
+}
+
+.bar:hover {
+    fill: #0080BF;
+}
+
+#tooltip {
+    display: none;
+}
+
+.bar:hover ~ #tooltip {
+    display: block;
+    color: red;
 }
