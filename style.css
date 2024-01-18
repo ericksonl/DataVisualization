@@ -1,7 +1,41 @@
+.instrument-serif-regular {
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
 body {
-    width: 100vw;
-    height: 100vw;
     text-align: center;
+}
+
+h1 {
+    text-align: center;
+    font-family: "Instrument Serif", serif;
+    letter-spacing: .3rem;
+    font-size: 3rem;
+    transform: scale(1, .8);
+}
+
+#tooltip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    text-align: center;
+    width: 150px;
+    height: 80px;
+    padding: 2px;
+    font-size: 1.2rem;
+    background: #b0c4de;
+    box-shadow: 1px 1px 10px;
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+.axis-label {
+    text-align: center;
+    font-family: serif;
+    font-size: 2rem;
 }
 
 .bar {
@@ -12,11 +46,11 @@ body {
     fill: #0080BF;
 }
 
-#tooltip {
-    display: none;
+rect {
+    border-radius: 200px;
 }
 
-.bar:hover ~ #tooltip {
-    display: block;
-    color: red;
+.tick>text {
+    font-weight: 600;
+    font-size: 1rem;
 }
