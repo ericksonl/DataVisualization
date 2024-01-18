@@ -21,13 +21,14 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     //set width and height of SVG
-    let width = 700;
-    let height = 500;
+    const width = 900;
+    const height = 500;
 
     // Padding between the SVG boundary and the plot
     const padding = 50;
 
     function drawChart() {
+
 
         //Get the range for the X axis
         var maxYear = d3.max(yearData, (d) => d)
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //set xScale with scaleTime
         var xScale = d3.scaleTime()
             .domain([minDate, maxDate])
-            .range([padding, width])
+            .range([padding, width - padding])
 
         //set xScale with scaleLinear
         var yScale = d3.scaleLinear()
@@ -57,18 +58,34 @@ document.addEventListener('DOMContentLoaded', function () {
         //create the SVG
         var svg = d3.select("body")
             .append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", width + 100)
+            .attr("height", height + 100)
+
+        svg.append("text")
+            .attr("id", "title")
+            .attr("x", width / 2)
+            .attr("y", padding / 2)
+            .attr("text-anchor", "middle")
+            .text("United States GDP Over Time")
 
         //draw x axis
         svg.append("g")
             .attr("id", "x-axis")
+            .attr("transform", "translate(0, " + height + ")")
+            .attr("class", "tick")
             .call(xAxis)
 
         //draw y axis
         svg.append("g")
             .attr("id", "y-axis")
+            .attr("transform", "translate(" + padding + ",0 )")
+            .attr("class", "tick")
             .call(yAxis)
+
+        var tooltip = d3.select("body")
+            .append("div")
+            .attr("id", "tooltip")
+            .style("display", "none")
 
         //Add bars for bar graph
         svg.selectAll("rect")
@@ -76,12 +93,27 @@ document.addEventListener('DOMContentLoaded', function () {
             .enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("x", (d, i) => i * 30)
-            .attr("y", (d, i) => height - (3*d[1]))
-            .attr("width", 25)
-            .attr("height", (d, i) => 3 * d[0])
-            .append("title")
+            .attr("x", (d, i) => xScale(yearData[i]))
+            .attr("y", (d) => height - yScale(maxValue - d[1]))
+            .attr("width", (width - padding) / dataset.length - 1)
+            .attr("height", (d) => yScale(maxValue - d[1]))
+            .attr("data-date", (d) => (d[0]))
+            .attr("data-gdp", (d) => (d[1]))
+            .on("mouseover", (d) => {
+                // Update tooltip content dynamically on mouseover
+                tooltip.html(`Date: ${d[0]}<br/>GDP Amount: ${d[1]}`)
+                    .style("display", "block")
+                    .style("left", (10) + "px")
+                    .style("top", (10) + "px");
+            })
+            .on("mouseout", function () {
+                // Hide the tooltip on mouseout
+                tooltip.style("display", "none");
+            })
+
     }
+
+
 
 });
 
