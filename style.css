@@ -1,0 +1,9 @@
+body {
+    width: 100vw;
+    height: 100vw;
+    text-align: center;
+}
+
+.bar {
+    background-color: blue;
+}
