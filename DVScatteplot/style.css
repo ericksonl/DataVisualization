@@ -6,21 +6,14 @@ body {
     font-size: 1.5rem;
 }
 
-circle {
-    border: 1px solid black;   
-}
-
-.domain {
-    stroke-width: 2px;
-}
-
 .tick {
     font-size: 0.8rem;
 }
 
-.tick > line {
+.tick > line, .domain {
     stroke-width: 2px;
 }
+
 
 #tooltip {
     background-color: lavender;
@@ -33,8 +26,6 @@ circle {
     padding: 0 10px 0 10px;
 }
 
-#legend {
-    background-color: lavender;
-    border-radius: 10px;
-    padding-top: -20px;
+.legend-entry {
+    font-size: 1.2rem;
 }

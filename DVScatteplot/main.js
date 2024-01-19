@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const yearOffset = 1
     const timeOffset = 10 * 1000 //10 seconds converted to milliseconds.
     const legendColors = ["#41EAD4", "#F25C54"]
-    const legendLabels = ["No Doping Allegations", "Doping Allegations"]
+    const legendLabels = ["- No Doping Allegations", "- Doping Allegations"]
 
     // Padding between the SVG boundary and the plot
     const svgPadding = 50;
@@ -67,12 +67,13 @@ document.addEventListener('DOMContentLoaded', function () {
         legend.append("rect")
             .attr("width", 15)
             .attr("height", 15)
-            .attr("x", width - xPadding)
+            .attr("x", width - xPadding - 50)
+            .attr("y", svgPadding - 13)
             .attr("fill", (d) => d);
 
         legend.append("text")
-            .attr("x", width - xPadding + 20)
-            .attr("y", 13)
+            .attr("x", width - xPadding - 30)
+            .attr("y", svgPadding)
             .text((d, i) => legendLabels[i])
 
         //Get the range for the X axis (years)
@@ -153,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("class", "dot")
             .attr("cx", (d) => xScale(new Date(d.Year, 0)) + xPadding)
             .attr("cy", (d) => yScale(d.parsedTime) + yPadding)
-            .attr("r", 6)
+            .attr("r", 0)
             .attr("data-xvalue", (d) => d.Year)
             .attr("data-yvalue", (d) => d.parsedTime)
             .each(function (d) {
@@ -169,7 +170,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         .style("stroke-width", "2px")
                 }
             })
-            .on("mouseover", (d) => {
+            .on("mouseover", function (d) {
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .attr("r", 15);
+
                 tooltip.html(`<p class="tooltipInfo">` + d.Name + " - " + d.Nationality + `<br />`
                     + "Year: " + d.Year + `<br />` +
                     "Time: " + d.Time + (d.Doping ? '<br/>' + d.Doping : '') + `</p>`)
@@ -188,10 +194,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 tooltip.style("top", d3.event.pageY - svgPadding + topOffset + "px");
             })
             .on("mouseout", function () {
+                d3.select(this)
+                    .transition() // Apply the transition
+                    .duration(1000) // Set the duration of the transition in milliseconds
+                    .attr("r", 6);
                 tooltip.style("display", "none")
                     .style("top", 0 + "px")
                     .style("left", 0 + "px")
             })
+            .transition() // Apply the transition
+            .duration(1000) // Set the duration of the transition in milliseconds
+            .attr("r", 6);
     }
 });
 
