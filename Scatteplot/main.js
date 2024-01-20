@@ -40,6 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function drawChart() {
 
+        d3.select("body")
+            .append("h1")
+            .attr('id', 'title')
+            .text(`Doping in Professional Bicycle Racing`)
+
         //create the SVG
         var svg = d3.select("body")
             .append("svg")
@@ -180,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     + "Year: " + d.Year + `<br />` +
                     "Time: " + d.Time + (d.Doping ? '<br/>' + d.Doping : '') + `</p>`)
                     .style("display", "flex")
+                    .attr("data-year", d.Year)
 
                 //create ternary operator
                 //condition ? expression_if_true : expression_if_false;

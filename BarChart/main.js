@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function drawChart() {
 
+        d3.select("body")
+            .append("h1")
+            .attr('id', 'title')
+            .text(`United States GDP Over Time`)
+
         //Get the range for the X axis (years)
         var maxYear = d3.max(yearData, (d) => d)
         var minYear = d3.min(yearData, (d) => d)
@@ -130,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Update tooltip content dynamically on mouseover
                 tooltip.html(`${yearData[i].toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}<br/>$${d[1]} Billion`)
                     .style("opacity", 1)
+                    .attr("data-date", d[0])
                 if (yearData[i].getFullYear() >= '2000') {
                     tooltip.style("left", (d3.event.pageX - 180) + "px")
                         .style("top", 500 + "px")
