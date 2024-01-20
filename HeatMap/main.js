@@ -26,15 +26,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //set width and height of SVG
     const width = 1600;
-    const height = 700;
+    const height = 630;
 
     //add xPadding for style
     const xPadding = 100
     const yPadding = 5
     const svgPadding = 20;
     const legendPadding = 100
-    const legendTicks = [0, 1.5, 3, 4.5, 6, 7.5, 9, 10.5, 12, 13.5]
-    const legendColors = ["#0001B2", "#2F43FF", "#6373FF", "#8F9CFF", "#CDDBFF", "#FFF2CE", "#FD9415", "#E23201", "#D00800", "#9E0007"]
+    const legendTicks = [2.8, 3.9, 5, 6.1, 7.2, 8.3, 9.5, 10.6, 11.7, 12.8]
+    const legendColors = ["#0001B2", "#2F43FF", "#6373FF", "#8F9CFF", "#CDDBFF", "#FFF2CE", "#FEB938", "#FD9415", "#E23201", "#D00800", "#9E0007"]
 
     function drawChart() {
 
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("width", 30)
             .attr("height", 30)
             .attr("x", width - 60)
-            .attr("y", yPadding)
+            .attr("y", ((height / 2) - 370))
             .attr("fill", (color) => color);
 
         //Find max and min for legend-axis range
@@ -79,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Max Variance: ", maxVariance, "\nMin Variance: ", minVariance)
 
         var legendScale = d3.scaleLinear()
-            .domain([-1.5, 15])
-            .range([svgPadding, (30 * 10) + 50]);
+            .domain([1.7, 13.9])
+            .range([svgPadding, (30 * 10) + 49]);
 
         var legendAxis = d3.axisBottom(legendScale);
 
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         svg.append("g")
             .attr("id", "legend-axis")
-            .attr("transform", "translate(" + 70 + "," + (height + yPadding + svgPadding + 10) + ")")
+            .attr("transform", "translate(" + 70 + "," + (height - 25) + ")")
             .attr("class", "tick")
             .call(legendAxis);
 
@@ -106,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var maxYear = d3.max(dateData, (d) => d)
         var minYear = d3.min(dateData, (d) => d)
         console.log("Max Year: ", maxYear, "\nMin Year: ", minYear)
-
 
         //Create the range for y-axis
         //0 represents January, 11 for december
@@ -144,29 +143,30 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("x", (d, i) => xScale(new Date(dateData[i].getFullYear(), 0)) + xPadding)
             .attr("y", (d, i) => yScale(months[dateData[i].getMonth()]) + yPadding)
             .attr("width", (d, i) => 5.8)
-            .attr("height", (d, i) => 48)
+            .attr("height", (d, i) => 43)
             .attr("class", "cell")
+            .attr("id", (d,i) => `rect${i}`)
             .style("fill", (d) => {
                 switch (true) {
-                    case (d.temp < 0):
+                    case (d.temp < 2.8):
                         return legendColors[0];
-                    case (d.temp < 3):
+                    case (d.temp < 3.9):
                         return legendColors[1];
-                    case (d.temp < 4.5):
+                    case (d.temp < 5):
                         return legendColors[2];
-                    case (d.temp < 6):
+                    case (d.temp < 6.1):
                         return legendColors[3];
-                    case (d.temp < 7.5):
+                    case (d.temp < 7.2):
                         return legendColors[4];
-                    case (d.temp < 9):
+                    case (d.temp < 8.3):
                         return legendColors[5];
-                    case (d.temp < 10.5):
+                    case (d.temp < 9.5):
                         return legendColors[6];
-                    case (d.temp < 12):
+                    case (d.temp < 10.6):
                         return legendColors[7];
-                    case (d.temp < 13.5):
+                    case (d.temp < 11.7):
                         return legendColors[8];
-                    case (d.temp < 15):
+                    case (d.temp < 12.8):
                         return legendColors[9];
                     default:
                         return legendColors[10];
@@ -177,12 +177,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 d3.select(this)
                     .style("stroke", "black")  // Set the outline color to black
                     .style("stroke-width", 2)  // Set the outline thickness
-                tooltip.html(`${d.year}<br/>${d.month}<br/>${d.temp}<br/>${Math.round(d.variance * 10)/10}`)
+                tooltip.html(`${d.year} - ${months[d.month - 1]}<br/>${d.temp}℃<br/>${Math.round(d.variance * 10) / 10}℃`)
                     .style("display", "flex")
-                    .style("left", (d3.event.pageX - 15) + "px")
-                    .style("top", (d3.event.pageY - legendPadding) + "px")
+
+                var tooltipSpecs = document.getElementById('tooltip').getBoundingClientRect()
+                var rectSpecs = document.getElementById('rect' + i).getBoundingClientRect()
+
+                tooltip.style("left", (d3.event.pageX - (tooltipSpecs.width / 2)) + "px")
+                    .style("top", ((rectSpecs.y - 80)) + "px")
             })
-            .on("mouseout", function() {
+            .on("mouseout", function () {
                 d3.select(this)
                     .style("stroke", "none")  // Set the outline color to black
                 tooltip.style("display", "none")
