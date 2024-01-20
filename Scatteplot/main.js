@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .domain([minDate, maxDate])
             .range([svgPadding, width - svgPadding])
 
-        //set xScale with scaleLinear
+        //set yScale with scaleLinear
         var yScale = d3.scaleLinear()
             .domain([maxTime, new Date(minTime.getTime() - timeOffset)])
             .range([height, 0])
