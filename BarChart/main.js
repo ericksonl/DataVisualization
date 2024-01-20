@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function drawChart() {
 
+        d3.select("body")
+            .append("h1")
+            .attr('id', 'title')
+            .text(`United States GDP Over Time`)
+
         //Get the range for the X axis (years)
         var maxYear = d3.max(yearData, (d) => d)
         var minYear = d3.min(yearData, (d) => d)
