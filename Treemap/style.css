@@ -1,0 +1,12 @@
+body {
+    text-align: center;
+}
+
+.homeBtn {
+    padding-top: 20px;
+}
+
+.homeBtn>a {
+    color: black;
+    text-decoration: none;
+}
