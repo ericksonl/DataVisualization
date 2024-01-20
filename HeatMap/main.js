@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const svgPadding = 20;
     const legendPadding = 100
     const legendTicks = [2.8, 3.9, 5, 6.1, 7.2, 8.3, 9.5, 10.6, 11.7, 12.8]
-    const legendColors = ["#0001B2", "#2F43FF", "#6373FF", "#8F9CFF", "#CDDBFF", "#FFF2CE", "#FEB938", "#FD9415", "#E23201", "#D00800", "#9E0007"]
+    const legendColors = ["#0001B2", "#2F43FF", "#6373FF", "#8F9CFF", "#CDDBFF", "#FFF2CE", "#ffda84", "#FEB938", "#FD9415", "#E23201", "#D00800"]
 
     function drawChart() {
 
