@@ -3,7 +3,7 @@ var baseTemp
 var dateData = []
 
 document.addEventListener('DOMContentLoaded', function () {
-    //open new XMLHttp Request for the data
+    //fetch request for the data
     var url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json'
     console.log("Retrieving data...")
     fetch(url)
