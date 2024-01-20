@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     .style("stroke", "black")  // Set the outline color to black
                     .style("stroke-width", 2)  // Set the outline thickness
                 tooltip.html(`${d.year} - ${months[d.month - 1]}<br/>${d.temp}℃<br/>${Math.round(d.variance * 10) / 10}℃`)
-                    .attr("data-year", d.year)
+                .attr("data-year", d.year)
                     .style("display", "flex")
 
                 var tooltipSpecs = document.getElementById('tooltip').getBoundingClientRect()
