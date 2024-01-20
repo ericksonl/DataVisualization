@@ -39,7 +39,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function drawChart() {
 
         d3.select("body")
+            .append("h1")
+            .attr('id', 'title')
+            .text(`Monthly Global Land-Surface Temperature`)
             .append("h3")
+            .attr('id', 'description')
             .text(`1753 - 2015: base temperature ${baseTemp}℃`)
 
         //create the SVG
@@ -145,7 +149,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("width", (d, i) => 5.8)
             .attr("height", (d, i) => 43)
             .attr("class", "cell")
-            .attr("id", (d,i) => `rect${i}`)
+            .attr("data-month", (d) => d.month - 1)
+            .attr("data-year", (d) => d.year)
+            .attr("data-temp", (d) => d.temp)
+            .attr("id", (d, i) => `rect${i}`)
             .style("fill", (d) => {
                 switch (true) {
                     case (d.temp < 2.8):
@@ -178,13 +185,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     .style("stroke", "black")  // Set the outline color to black
                     .style("stroke-width", 2)  // Set the outline thickness
                 tooltip.html(`${d.year} - ${months[d.month - 1]}<br/>${d.temp}℃<br/>${Math.round(d.variance * 10) / 10}℃`)
+                .attr("data-year", d.year)
                     .style("display", "flex")
 
                 var tooltipSpecs = document.getElementById('tooltip').getBoundingClientRect()
                 var rectSpecs = document.getElementById('rect' + i).getBoundingClientRect()
 
                 tooltip.style("left", (d3.event.pageX - (tooltipSpecs.width / 2)) + "px")
-                    .style("top", ((rectSpecs.y - 80)) + "px")
+                    .style("top", ((rectSpecs.y - (2 * rectSpecs.height))) + "px")
             })
             .on("mouseout", function () {
                 d3.select(this)
