@@ -2,7 +2,7 @@ var dataset
 var yearData = []
 
 document.addEventListener('DOMContentLoaded', function () {
-    //open new XMLHttp Request for the data
+    //fetch request for the data
     var url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json'
     console.log("Retrieving data...")
     fetch(url)
