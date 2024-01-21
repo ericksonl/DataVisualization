@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var yAxis = d3.axisLeft(yScale)
 
         //create threshold for fill values
-        d3.scaleThreshold()
+        var colors = d3.scaleThreshold()
             .domain(legendTicks)
             .range(legendColors)
 
@@ -153,32 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("data-year", (d) => d.year)
             .attr("data-temp", (d) => d.temp)
             .attr("id", (d, i) => `rect${i}`)
-            .style("fill", (d) => {
-                switch (true) {
-                    case (d.temp < 2.8):
-                        return legendColors[0];
-                    case (d.temp < 3.9):
-                        return legendColors[1];
-                    case (d.temp < 5):
-                        return legendColors[2];
-                    case (d.temp < 6.1):
-                        return legendColors[3];
-                    case (d.temp < 7.2):
-                        return legendColors[4];
-                    case (d.temp < 8.3):
-                        return legendColors[5];
-                    case (d.temp < 9.5):
-                        return legendColors[6];
-                    case (d.temp < 10.6):
-                        return legendColors[7];
-                    case (d.temp < 11.7):
-                        return legendColors[8];
-                    case (d.temp < 12.8):
-                        return legendColors[9];
-                    default:
-                        return legendColors[10];
-                }
-            })
+            .style("fill", (d) => colors(d.temp))
             .on("mouseover", function (d, i) {
                 // Update tooltip content dynamically on mouseover
                 d3.select(this)
