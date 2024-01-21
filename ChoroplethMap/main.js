@@ -1,56 +1,65 @@
-var dataset
-var baseTemp
-var dateData = []
+var educationData
+var countyData
+var stateData
 
 document.addEventListener('DOMContentLoaded', function () {
-    //open new XMLHttp Request for the data
-    var url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json'
+    //fetch Request for the data
+    var educationURL = 'https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json'
+    var countyURL = 'https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json'
     console.log("Retrieving data...")
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response not ok", + response)
+
+    //use d3.json to fetch and convert data into js objects
+    d3.json(countyURL).then(
+        (data, error) => {
+            if (error) {
+                console.log(log)
+            } else {
+                countyData = topojson.feature(data, data.objects.counties).features
+                stateData = topojson.mesh(data, data.objects.states);
+                console.log("County Data: ", countyData)
+
+                d3.json(educationURL).then(
+                    (data, error) => {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            educationData = data
+                            console.log("Education Data: ", educationData)
+                            drawMap()
+                        }
+                    })
             }
-            console.log("Data retrieved")
-            return response.json()
-        })
-        .then(data => {
-            dataset = data
-            baseTemp = data.baseTemperature
-            console.log(dataset)
+        }
+    )
 
-            console.log("Creating chart...")
-            drawChart();
-        })
-        .catch(error => console.log('Error fetching data', error))
+    //Set width and height of svg
+    var width = 1500;
+    var height = 600;
 
-    //set width and height of SVG
-    const width = 1600;
-    const height = 630;
+    async function drawMap() {
 
-    //add xPadding for style
-    const xPadding = 100
-    const yPadding = 5
-    const svgPadding = 20;
-    const legendPadding = 100
-    const legendTicks = [2.8, 3.9, 5, 6.1, 7.2, 8.3, 9.5, 10.6, 11.7, 12.8]
-    const legendColors = ["#0001B2", "#2F43FF", "#6373FF", "#8F9CFF", "#CDDBFF", "#FFF2CE", "#ffda84", "#FEB938", "#FD9415", "#E23201", "#D00800"]
-
-    function drawChart() {
-
-        var title = d3.select("body")
+        //create title and description
+        let title = d3.select("body")
             .append("h1")
             .attr('id', 'title')
             .text("United States Educational Attainment")
+
+        let description = d3.select("body")
             .append("h3")
             .attr('id', 'description')
             .text("Percentage of adults age 25 and older with a bachelor's degree or higher (2010-2014)")
 
         //create the SVG
-        var svg = d3.select("body")
+        let canvas = d3.select("body")
             .append("svg")
-            .attr("width", width + legendPadding)
-            .attr("height", height + legendPadding)
+            .attr("id", "canvas")
+            .attr("width", width)
+            .attr("height", height)
+
+        var svg = canvas.append("svg")
+            .attr("x", 250)
+            .attr("y", 5)
+            .attr("id", "map")
 
         //Create a tooltip section when hovering over an element
         var tooltip = d3.select("body")
@@ -59,176 +68,103 @@ document.addEventListener('DOMContentLoaded', function () {
             .style("position", "absolute")
             .style("display", "none")
 
-        // Create the legend
-        var legendGroup = svg.append("g")
-            .attr("id", "legend")
-            .selectAll(".legend-entry")
-            .data(legendColors)
-            .enter()
-            .append("g")
-            .attr("class", "legend-entry")
-            .attr("transform", (color, i) => "translate(" + ((i * 30) - width + 150) + "," + height + ")"); // 50 move on x-axis, height to move on y-axis
+        const thresholdDomain = [3, 12, 21, 30, 39, 48, 57, 66] //Directly related to percent of bachelorsOrHigher
 
-        // Add the squares
-        legendGroup.append("rect")
-            .attr("width", 30)
-            .attr("height", 30)
-            .attr("x", width - 60)
-            .attr("y", ((height / 2) - 370))
-            .attr("fill", (color) => color);
-
-        //Find max and min for legend-axis range
-        var maxVariance = d3.max(dataset.monthlyVariance, (d) => d.variance)
-        var minVariance = d3.min(dataset.monthlyVariance, (d) => d.variance)
-        console.log("Max Variance: ", maxVariance, "\nMin Variance: ", minVariance)
-
-        var legendScale = d3.scaleLinear()
-            .domain([1.7, 13.9])
-            .range([svgPadding, (30 * 10) + 49]);
-
-        var legendAxis = d3.axisBottom(legendScale);
-
-        legendAxis.tickValues(legendTicks)
-            .tickFormat(d3.format(".1f"));
-
-        svg.append("g")
-            .attr("id", "legend-axis")
-            .attr("transform", "translate(" + 70 + "," + (height - 25) + ")")
-            .attr("class", "tick")
-            .call(legendAxis);
-
-
-        //create a new Date with each year and month
-        //While we're here, add a new overall temp data point
-        dataset.monthlyVariance.forEach(element => {
-            dateData.push(new Date(element.year, element.month - 1, 1))
-            temp = element.variance + baseTemp
-            element.temp = Math.round(temp * 10) / 10
-        })
-
-        //Get the range for the x-axis
-        var maxYear = d3.max(dateData, (d) => d)
-        var minYear = d3.min(dateData, (d) => d)
-        console.log("Max Year: ", maxYear, "\nMin Year: ", minYear)
-
-        //Create the range for y-axis
-        //0 represents January, 11 for december
-        var maxMonth = new Date(0, 0, 1)
-        var minMonth = new Date(0, 11, 1)
-        console.log("Min Date:", minMonth, "\nMax Date:", maxMonth)
-
-        //set xScale with scaleTime
-        var xScale = d3.scaleTime()
-            .domain([minYear, maxYear])
-            .rangeRound([svgPadding, width - svgPadding - yPadding])
-
-        var months = ["January", "February", "March", "April", "May", "June", "July",
-            "August", "September", "October", "November", "December"]
-
-        //set yScale with scaleLinear
-        var yScale = d3.scaleBand()
-            .domain(months)
-            .range([height - svgPadding - yPadding - legendPadding, 0])
-
-        //define the x and y axis
-        var xAxis = d3.axisBottom(xScale)
-        var yAxis = d3.axisLeft(yScale)
+        const colorCodes = d3.schemeGreens[9]
 
         //create threshold for fill values
-        d3.scaleThreshold()
-            .domain(legendTicks)
-            .range(legendColors)
+        var colors = d3.scaleThreshold()
+            .domain(thresholdDomain)
+            .range(colorCodes)
 
-        svg.append("g")
-            .selectAll("rect")
-            .data(dataset.monthlyVariance)
+        //create counties with dynamic fill
+        svg.selectAll("path")
+            .data(countyData)
             .enter()
-            .append("rect")
-            .attr("x", (d, i) => xScale(new Date(dateData[i].getFullYear(), 0)) + xPadding)
-            .attr("y", (d, i) => yScale(months[dateData[i].getMonth()]) + yPadding)
-            .attr("width", (d, i) => 5.8)
-            .attr("height", (d, i) => 43)
-            .attr("class", "cell")
-            .attr("data-month", (d) => d.month - 1)
-            .attr("data-year", (d) => d.year)
-            .attr("data-temp", (d) => d.temp)
-            .attr("id", (d, i) => `rect${i}`)
-            .style("fill", (d) => {
-                switch (true) {
-                    case (d.temp < 2.8):
-                        return legendColors[0];
-                    case (d.temp < 3.9):
-                        return legendColors[1];
-                    case (d.temp < 5):
-                        return legendColors[2];
-                    case (d.temp < 6.1):
-                        return legendColors[3];
-                    case (d.temp < 7.2):
-                        return legendColors[4];
-                    case (d.temp < 8.3):
-                        return legendColors[5];
-                    case (d.temp < 9.5):
-                        return legendColors[6];
-                    case (d.temp < 10.6):
-                        return legendColors[7];
-                    case (d.temp < 11.7):
-                        return legendColors[8];
-                    case (d.temp < 12.8):
-                        return legendColors[9];
-                    default:
-                        return legendColors[10];
-                }
+            .append("path")
+            .attr("d", d3.geoPath())
+            .attr("class", "county")
+            .style("fill", (d, i) => {
+                let countyID = d.id
+                let county = educationData.find((item) =>
+                    item.fips === countyID //if fips matches countyID set county to corresponding data element
+                )
+                let percent = county.bachelorsOrHigher
+                return colors(percent)
+            })
+            .attr("data-fips", (d) => d.id)
+            .attr("data-education", (d) => {
+                return educationData.find((item) =>
+                    item.fips === d.id
+                ).bachelorsOrHigher
             })
             .on("mouseover", function (d, i) {
                 // Update tooltip content dynamically on mouseover
                 d3.select(this)
-                    .style("stroke", "black")  // Set the outline color to black
+                    .style("stroke", "rgba(0,0,0,0.5")  // Set the outline color to black
                     .style("stroke-width", 2)  // Set the outline thickness
-                tooltip.html(`${d.year} - ${months[d.month - 1]}<br/>${d.temp}℃<br/>${Math.round(d.variance * 10) / 10}℃`)
+
+                //find cooresponding education data
+                let educationTooltip = educationData.find((item) =>
+                    item.fips === d.id
+                )
+
+                tooltip.html(`${educationTooltip.area_name}, ${educationTooltip.state}: ${educationTooltip.bachelorsOrHigher}%`)
                     .attr("data-year", d.year)
                     .style("display", "flex")
+                    .attr("data-education", educationTooltip.bachelorsOrHigher)
 
                 var tooltipSpecs = document.getElementById('tooltip').getBoundingClientRect()
-                var rectSpecs = document.getElementById('rect' + i).getBoundingClientRect()
+                var rectSpecs = this.getBoundingClientRect()
 
                 tooltip.style("left", (d3.event.pageX - (tooltipSpecs.width / 2)) + "px")
-                    .style("top", ((rectSpecs.y - (2 * rectSpecs.height))) + "px")
+                    .style("top", ((rectSpecs.y - 50)) + "px")
             })
             .on("mouseout", function () {
                 d3.select(this)
-                    .style("stroke", "none")  // Set the outline color to black
+                    .style("stroke", "none") 
                 tooltip.style("display", "none")
             })
-        //draw x axis
-        svg.append("g")
-            .attr("id", "x-axis")
-            .attr("transform", "translate(" + xPadding + "," + (height - legendPadding - svgPadding) + ")")
-            .attr("class", "tick")
-            .call(xAxis.tickFormat(d3.utcFormat('%Y'))
-                .tickPadding(10))
 
-        //draw y axis
-        svg.append("g")
-            .attr("id", "y-axis")
-            .attr("transform", "translate(" + (svgPadding + xPadding) + ", " + yPadding + ")")
-            .attr("class", "tick")
-            .call(yAxis.tickPadding(10))
+        //create outlines for states
+        svg.append("path")
+            .datum(stateData)
+            .attr("d", d3.geoPath())
+            .attr("class", "states");
 
-        //label x-axis
-        svg.append("text")
-            .attr("class", "axis-label")
-            .attr("text-anchor", "middle")
-            .attr("x", width / 2 + xPadding - 2)
-            .attr("y", height + yPadding - 30)
-            .text("Year");
+        // Create the legend
+        var legendScale = d3.scaleLinear()
+            .domain([.75, -0.06])
+            .range([height - 329, 0])
 
-        //label y-axis
-        svg.append("text")
-            .attr("class", "axis-label")
-            .attr("text-anchor", "middle")
-            .attr("transform", "rotate(-90)")
-            .attr("x", ((-legendPadding * 2) - 43))
-            .attr("y", svgPadding - yPadding)
-            .text("Month");
+        var legendAxis = d3.axisRight(legendScale)
+
+        legendAxis.tickValues(thresholdDomain.map(value => value / 100)) //convert ticks to percentage
+            .tickFormat(d3.format(".0%"))
+            .tickSize(36)
+
+        //create legend axis
+        var legendAxisGroup = canvas.append("g")
+            .attr("id", "legend-axis")
+            .attr("transform", "translate(" + 1240 + "," + ((height / 3) - 6) + ")")
+            .call(legendAxis);
+
+        //add rectangles
+        //put on svg to be below the legend axis
+        var legendGroup = svg.append("g")
+            .attr("class", "key")
+            .attr("id", "legend")
+            .attr("transform", "translate(" + (width - 480) + "," + 190 + ") rotate(90)");
+
+        //Add the squares
+        legendGroup.selectAll("rect")
+            .data(colorCodes)
+            .join("rect")
+            .attr("width", 30)
+            .attr("height", 30)
+            .attr("x", (d, i) => i * 30)
+            .attr("y", 0)
+            .attr("fill", d => d);
+
     }
 });
