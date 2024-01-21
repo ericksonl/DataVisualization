@@ -9,4 +9,26 @@ body {
 .homeBtn>a {
     color: black;
     text-decoration: none;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.heading {
+    text-align: center;
+    justify-content: center;
+}
+
+#buttons {
+    text-decoration: none;
+    padding-left: 25px;
+    padding-right: 25px;
+    display: flex;
+    width: 50vw;
+    margin: 0 auto; 
+    text-align: center;
+    justify-content: space-around;
+}
+
+.buttons {
+    padding: 5px 20px 5px 20px;
 }
