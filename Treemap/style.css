@@ -1,5 +1,6 @@
 body {
     text-align: center;
+    background-color: #297373;
 }
 
 .homeBtn {
@@ -9,26 +10,93 @@ body {
 .homeBtn>a {
     color: black;
     text-decoration: none;
-    padding-left: 25px;
-    padding-right: 25px;
 }
 
-.heading {
+#heading {
     text-align: center;
-    justify-content: center;
+    padding-bottom: 20px;
 }
 
 #buttons {
-    text-decoration: none;
-    padding-left: 25px;
-    padding-right: 25px;
     display: flex;
     width: 50vw;
-    margin: 0 auto; 
+    margin: 0 auto;
     text-align: center;
     justify-content: space-around;
 }
 
 .buttons {
-    padding: 5px 20px 5px 20px;
+    align-self: center;
+    background-color: #fff;
+    background-image: none;
+    background-position: 0 90%;
+    background-repeat: repeat no-repeat;
+    background-size: 4px 3px;
+    border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+    border-style: solid;
+    border-width: 2px;
+    box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+    box-sizing: border-box;
+    color: #41403e;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Neucha, sans-serif;
+    font-size: 1rem;
+    line-height: 23px;
+    outline: none;
+    padding: .75rem;
+    text-decoration: none;
+    transition: all 235ms ease-in-out;
+    border-bottom-left-radius: 15px 255px;
+    border-bottom-right-radius: 225px 15px;
+    border-top-left-radius: 255px 15px;
+    border-top-right-radius: 15px 225px;
+}
+
+.buttons:hover {
+    box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+    transform: translate3d(0, 2px, 0);
+}
+
+.buttons:focus {
+    box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+}
+
+#main-content {
+    display: flex;
+}
+
+#canvas {
+    flex: 4;
+    margin-left: 6rem;
+}
+
+#svg {
+    border: 3px solid black;
+    border-radius: 20px;
+}
+
+#legend {
+    flex: 1;
+    margin-right: 6rem;
+    padding: 20px;
+}
+
+#legend>svg {
+    transform: translateY(35%);
+    background-color: #FF8552;
+    padding: 20px;
+    border-radius: 20px;
+    border: 3px solid black;
+}
+
+#legend>svg>text {
+    font-size: 1.2rem;
+}
+
+#tooltip {
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 10px 20px 10px 20px;
+    border-radius: 10px;
 }
