@@ -57,11 +57,6 @@ function initCall() {
     console.log("Color", d3.schemeBrBG[2])
     colorArray = d3.schemePastel2.concat(d3.schemeSet3)
 
-    // for (i = 0; i < 1; i += 0.05) {
-    //     let color = d3.interpolateRainbow(i)
-    //     colorArray.push(color)
-    // }
-
     colorsScale = d3.scaleOrdinal()
         .domain([1, 20])
         .range(colorArray)
@@ -149,10 +144,10 @@ function drawDiagram() {
         .attr('width', (d) => d.x1 - d.x0)
         .attr('height', (d) => d.y1 - d.y0)
         .on("mouseover", function (d, i) {
-            // Update tooltip content dynamically on mouseover
+            //update tooltip content dynamically on mouseover
             d3.select(this)
-                .style("stroke", "rgba(0,0,0,0.5")  // Set the outline color to black
-                .style("stroke-width", 2)  // Set the outline thickness
+                .style("stroke", "rgba(0,0,0,0.5")
+                .style("stroke-width", 2)
 
             tooltip.html(`${d.data.name}<br />${d.data.category}<br />${d.value}`)
                 .style("display", "flex")

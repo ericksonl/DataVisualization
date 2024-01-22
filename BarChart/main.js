@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //add xPadding for style
     const xPadding = 70
 
-    // Padding between the SVG boundary and the plot
+    //padding between SVG and plot
     const padding = 50;
 
     //space between each bar -> higher for less space
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("data-date", (d) => (d[0]))
             .attr("data-gdp", (d) => (d[1]))
             .on("mouseover", (d, i) => {
-                // Update tooltip content dynamically on mouseover
+                //update tooltip content dynamically on mouseover
                 tooltip.html(`${yearData[i].toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}<br/>$${d[1]} Billion`)
                     .style("opacity", 1)
                     .attr("data-date", d[0])
@@ -147,9 +147,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .on("mouseout", function () {
                 tooltip.style("opacity", 0)
             })
-            .transition() // Apply the transition
-            .duration(1000) // Set the duration of the transition in milliseconds
-            .delay((d, i) => i * 10) // Add a delay for each bar to create a staggered effect
+            .transition()
+            .duration(1000)
+            .delay((d, i) => i * 10)
             .attr("height", (d) => yScale(maxValue - d[1]));
     }
 });

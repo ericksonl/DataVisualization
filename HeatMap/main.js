@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .style("position", "absolute")
             .style("display", "none")
 
-        // Create the legend
+        //Create the legend
         var legendGroup = svg.append("g")
             .attr("id", "legend")
             .selectAll(".legend-entry")
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("class", "legend-entry")
             .attr("transform", (color, i) => "translate(" + ((i * 30) - width + 150) + "," + height + ")"); // 50 move on x-axis, height to move on y-axis
 
-        // Add the squares
+        //Add rect elements
         legendGroup.append("rect")
             .attr("width", 30)
             .attr("height", 30)
@@ -155,10 +155,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("id", (d, i) => `rect${i}`)
             .style("fill", (d) => colors(d.temp))
             .on("mouseover", function (d, i) {
-                // Update tooltip content dynamically on mouseover
+                //update tooltip content dynamically on mouseover
                 d3.select(this)
-                    .style("stroke", "black")  // Set the outline color to black
-                    .style("stroke-width", 2)  // Set the outline thickness
+                    .style("stroke", "black")
+                    .style("stroke-width", 2)
                 tooltip.html(`${d.year} - ${months[d.month - 1]}<br/>${d.temp}℃<br/>${Math.round(d.variance * 10) / 10}℃`)
                 .attr("data-year", d.year)
                     .style("display", "flex")
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .on("mouseout", function () {
                 d3.select(this)
-                    .style("stroke", "none")  // Set the outline color to black
+                    .style("stroke", "none")
                 tooltip.style("display", "none")
             })
         //draw x axis
