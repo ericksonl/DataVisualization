@@ -99,10 +99,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 ).bachelorsOrHigher
             })
             .on("mouseover", function (d, i) {
-                // Update tooltip content dynamically on mouseover
+                //update tooltip content dynamically on mouseover
                 d3.select(this)
-                    .style("stroke", "rgba(0,0,0,0.5")  // Set the outline color to black
-                    .style("stroke-width", 2)  // Set the outline thickness
+                    .style("stroke", "rgba(0,0,0,0.5")
+                    .style("stroke-width", 2)
 
                 //find cooresponding education data
                 let educationTooltip = educationData.find((item) =>
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("d", d3.geoPath())
             .attr("class", "states");
 
-        // Create the legend
+        //Create the legend
         var legendScale = d3.scaleLinear()
             .domain([.75, -0.06])
             .range([height - 329, 0])

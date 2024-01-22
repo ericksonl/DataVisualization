@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const legendColors = ["#41EAD4", "#F25C54"]
     const legendLabels = ["- No Doping Allegations", "- Doping Allegations"]
 
-    // Padding between the SVG boundary and the plot
     const svgPadding = 50;
     const timeFormat = d3.timeFormat('%M:%S')
 
@@ -201,15 +200,15 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .on("mouseout", function () {
                 d3.select(this)
-                    .transition() // Apply the transition
-                    .duration(1000) // Set the duration of the transition in milliseconds
+                    .transition()
+                    .duration(1000)
                     .attr("r", 6);
                 tooltip.style("display", "none")
                     .style("top", 0 + "px")
                     .style("left", 0 + "px")
             })
-            .transition() // Apply the transition
-            .duration(1000) // Set the duration of the transition in milliseconds
+            .transition()
+            .duration(1000)
             .attr("r", 6);
     }
 });
